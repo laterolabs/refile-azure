@@ -72,7 +72,7 @@ module Refile
         else
           uploadable
         end
-        @blobs.create_block_blob(@container, id, body, {content_type: uploadable.content_type})
+        @blobs.create_block_blob(@container, id, body, {content_type: uploadable.try(:content_type)})
       end
 
       Refile::File.new(self, id)
