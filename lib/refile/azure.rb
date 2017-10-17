@@ -72,7 +72,12 @@ module Refile
         else
           uploadable
         end
-        @blobs.create_block_blob(@container, id, body, {content_type: uploadable.try(:content_type)})
+        if uploadable.try(:content_type)
+          @blobs.create_block_blob(@container, id, body, {content_type: uploadable.content_type})
+        else
+          content_type = MIME::Types.type_for(uploadable.path)[0].content_type
+          @blobs.create_block_blob(@container, id, body, {content_type: content_type})
+        end
       end
 
       Refile::File.new(self, id)
